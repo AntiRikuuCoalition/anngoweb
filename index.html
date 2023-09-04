@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>暗号web</title>
+    <script src="暗号化.js"></script>
+    <link rel="icon" href="./AAA.ico">
+</head>
+<body>
+    <h1>暗 号 W E B</h1>
+    <a href="説.html">説明書、利用についてなど</a>
+    <form id="encryptForm">
+        <label for="message">メッセージ:</label><br>
+        <textarea id="message" name="message" cols="30" rows="5"></textarea><br><br>
+        <label for="key">キー:</label><br>
+        <input type="text" id="key" name="key"><br><br>
+        <input type="submit" value="暗号化">
+    </form> 
+    <p>暗号化されたメッセージ: <br><span id="encryptedMessage"></span></p>
+    <button id="copyEncrypted">暗号化されたメッセージをコピー</button>
+
+    <form id="decryptForm">
+        <label for="encrypted">暗号化されたメッセージ:</label><br>
+        <textarea id="encrypted" name="encrypted" cols="30" rows="5"></textarea><br><br>
+        <label for="decryptKey">キー:</label><br>
+        <input type="text" id="decryptKey" name="decryptKey"><br><br>
+        <input type="submit" value="複合化">
+    </form> 
+    <p>複合化されたメッセージ: <br><span id="decryptedMessage"></span></p>
+    <button id="copyDecrypted">複合化されたメッセージをコピー</button>
+
+    <script>
+        document.getElementById("encryptForm").addEventListener("submit", function(event){
+            event.preventDefault()
+            var message = document.getElementById("message").value;
+            var key = document.getElementById("key").value;
+            var encrypted = CryptoJS.AES.encrypt(message, key).toString();
+            var separatedEncrypted = encrypted.match(/.{1,64}/g).join('\n');
+            document.getElementById("encryptedMessage").innerHTML = separatedEncrypted;
+        });
+
+        document.getElementById("decryptForm").addEventListener("submit", function(event){
+            event.preventDefault()
+            var encrypted = document.getElementById("encrypted").value.replace(/[\r\n]+/g, '');
+            var key = document.getElementById("decryptKey").value;
+            var decrypted = CryptoJS.AES.decrypt(encrypted, key).toString(CryptoJS.enc.Utf8);
+            document.getElementById("decryptedMessage").innerHTML = decrypted;
+        });
+
+        document.getElementById("copyEncrypted").addEventListener("click", function(){
+            var encryptedMessage = document.getElementById("encryptedMessage").innerHTML;
+            navigator.clipboard.writeText(encryptedMessage);
+        });
+
+        document.getElementById("copyDecrypted").addEventListener("click", function(){
+            var decryptedMessage = document.getElementById("decryptedMessage").innerHTML;
+            navigator.clipboard.writeText(decryptedMessage);
+        });
+    </script>
+</body>
+</html> 
